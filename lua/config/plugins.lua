@@ -13,7 +13,7 @@ return require("lazy").setup({
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
-  },
+ },
 {
   "catppuccin/nvim",
   name = "catppuccin",
@@ -41,7 +41,7 @@ return require("lazy").setup({
           additional_vim_regex_highlighting = false,
         },
         indent = { enable = true },
-        ensure_installed = { "c", "cpp", "python", "lua", "javascript", "typescript" },
+        ensure_installed = { "c", "c_sharp", "cpp", "python", "lua", "javascript", "typescript" },
       })
     end,
   },
@@ -142,4 +142,27 @@ return require("lazy").setup({
     require("which-key").setup()
   end,
 },
+  {
+  "kawre/leetcode.nvim",
+  build = ":TSUpdate html",
+  dependencies = {
+    "nvim-telescope/telescope.nvim",
+    "nvim-lua/plenary.nvim",
+    "MunifTanjim/nui.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-tree/nvim-web-devicons",
+  },
+  opts = {
+    lang = "typescript",
+  },
+}
 })
+{
+    "tpope/vim-fugitive",
+    cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Gedit" },
+    keys = {
+      { "<leader>gs", "<cmd>Git<cr>", desc = "Git status" },
+      { "<leader>gb", "<cmd>Git blame<cr>", desc = "Git blame" },
+      { "<leader>gd", "<cmd>Gvdiffsplit<cr>", desc = "Git diff (split)" },
+    },
+  },
