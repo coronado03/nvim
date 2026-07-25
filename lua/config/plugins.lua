@@ -1,47 +1,53 @@
 return require("lazy").setup({
-  {
-    "williamboman/mason.nvim",
-  },
+  { "williamboman/mason.nvim" },
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "mason.nvim" },
   },
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "mason-lspconfig.nvim" },
+    dependencies = { "mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
+    config = function()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      require("lspconfig").kotlin_language_server.setup({ capabilities = capabilities })
+    end,
   },
+
+  -- Completion
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "hrsh7th/cmp-buffer" },
+  { "hrsh7th/cmp-path" },
+  { "L3MON4D3/LuaSnip" },
+  { "saadparwaiz1/cmp_luasnip" },
+
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
- },
-{
-  "catppuccin/nvim",
-  name = "catppuccin",
-  priority = 1000,
-  config = function()
-    require("catppuccin").setup({
-      flavour = "mocha",
-      transparent_background = true,
-      integrations = {
-        bufferline = true,
-      },
-    })
-    vim.cmd.colorscheme("catppuccin")
-  end,
-},
-    {
+  },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha",
+        transparent_background = true,
+        integrations = { bufferline = true },
+      })
+      vim.cmd.colorscheme("catppuccin")
+    end,
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    branch = 'master',
+    branch = "master",
     lazy = false,
     config = function()
       require("nvim-treesitter.configs").setup({
-        highlight = {
-          enable = true, 
-          additional_vim_regex_highlighting = false,
-        },
+        highlight = { enable = true, additional_vim_regex_highlighting = false },
         indent = { enable = true },
-        ensure_installed = { "c", "c_sharp", "cpp", "python", "lua", "javascript", "typescript" },
+        ensure_installed = { "c", "c_sharp", "cpp", "python", "lua", "javascript", "typescript", "kotlin" },
       })
     end,
   },
@@ -50,74 +56,64 @@ return require("lazy").setup({
     dependencies = { "nvim-lua/plenary.nvim" },
     lazy = false,
     config = function()
-      local telescope = require("telescope")
-      telescope.setup({
-        live_grep = {
-          file_ignore_patterns = { 'node_modules', '.git', '.cpcache', '.clj-kondo', '.lsp' },
-          search_dirs = { root_dir },
-        },
+      require("telescope").setup({
         defaults = {
           sorting_strategy = "ascending",
           layout_config = { prompt_position = "top" },
         },
       })
     end,
-  },{
-  "folke/flash.nvim",
-  event = "VeryLazy",
-  config = function()
-    require("flash").setup()
-  end,
-},
-{
-  "akinsho/bufferline.nvim",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
-  lazy = false,
-  config = function()
-    require("bufferline").setup({
-      options = {
-        diagnostics = "nvim_lsp",
-        offsets = {
-          { filetype = "oil", text = "File Explorer", highlight = "Directory" },
+  },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    config = function() require("flash").setup() end,
+  },
+  {
+    "akinsho/bufferline.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    lazy = false,
+    config = function()
+      require("bufferline").setup({
+        options = {
+          diagnostics = "nvim_lsp",
+          offsets = {
+            { filetype = "oil", text = "File Explorer", highlight = "Directory" },
+          },
         },
-      },
-    })
-  end,
-},
-{
-  "nvim-lualine/lualine.nvim",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
-  lazy = false,
-  config = function()
-    require("lualine").setup({
-      options = {
-        theme = "catppuccin",
-        section_separators = { left = "", right = "" },
-        component_separators = { left = "", right = "" },
-      },
-      sections = {
-        lualine_a = { "mode" },
-        lualine_b = { "branch", "diff", "diagnostics" },
-        lualine_c = { "filename" },
-        lualine_x = { "encoding", "filetype" },
-        lualine_y = { "progress" },
-        lualine_z = { "location" },
-      },
-    })
-  end,
-},
-{
-  "stevearc/oil.nvim",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
-  lazy = false,
-  config = function()
-    require("oil").setup({
-      view_options = {
-        show_hidden = true,
-      },
-    })
-  end,
-},
+      })
+    end,
+  },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    lazy = false,
+    config = function()
+      require("lualine").setup({
+        options = {
+          theme = "catppuccin",
+          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { "filename" },
+          lualine_x = { "encoding", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
+        },
+      })
+    end,
+  },
+  {
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    lazy = false,
+    config = function()
+      require("oil").setup({ view_options = { show_hidden = true } })
+    end,
+  },
   {
     "lewis6991/gitsigns.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -136,28 +132,23 @@ return require("lazy").setup({
     end,
   },
   {
-  "folke/which-key.nvim",
-  lazy = false,
-  config = function()
-    require("which-key").setup()
-  end,
-},
+    "folke/which-key.nvim",
+    lazy = false,
+    config = function() require("which-key").setup() end,
+  },
   {
-  "kawre/leetcode.nvim",
-  build = ":TSUpdate html",
-  dependencies = {
-    "nvim-telescope/telescope.nvim",
-    "nvim-lua/plenary.nvim",
-    "MunifTanjim/nui.nvim",
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-tree/nvim-web-devicons",
+    "kawre/leetcode.nvim",
+    build = ":TSUpdate html",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = { lang = "typescript" },
   },
-  opts = {
-    lang = "typescript",
-  },
-}
-})
-{
+  {
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Gedit" },
     keys = {
@@ -166,3 +157,4 @@ return require("lazy").setup({
       { "<leader>gd", "<cmd>Gvdiffsplit<cr>", desc = "Git diff (split)" },
     },
   },
+})
